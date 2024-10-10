@@ -726,7 +726,7 @@ class Cmpf(ComparisonOperation):
         operand1: SSAValue | Operation,
         operand2: SSAValue | Operation,
         arg: int | str,
-        fastmath: FastMathFlagsAttr | None = None,
+        fastmath: FastMathFlagsAttr = FastMathFlagsAttr("none"),
     ):
         operand1 = SSAValue.get(operand1)
         operand2 = SSAValue.get(operand2)
@@ -768,7 +768,7 @@ class Cmpf(ComparisonOperation):
         operand1 = parser.parse_unresolved_operand()
         parser.parse_punctuation(",")
         operand2 = parser.parse_unresolved_operand()
-        fastmath = None
+        fastmath = FastMathFlagsAttr("none")
         if parser.parse_optional_keyword("fastmath") is not None:
             fastmath = FastMathFlagsAttr(FastMathFlagsAttr.parse_parameter(parser))
         parser.parse_punctuation(":")
@@ -787,8 +787,8 @@ class Cmpf(ComparisonOperation):
         printer.print(", ")
         printer.print_operand(self.rhs)
         if self.fastmath is not None and self.fastmath != FastMathFlagsAttr("none"):
-            printer.print(" fastmath")
-            self.fastmath.print_parameter(printer)
+            printer.print(" ")
+            printer.print_attr_dict({"fastmath": self.fastmath})
         printer.print(" : ")
         printer.print_attribute(self.lhs.type)
 
